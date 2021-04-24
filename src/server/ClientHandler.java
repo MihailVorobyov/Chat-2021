@@ -6,13 +6,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler {
 
 	private DataOutputStream out;
 	private DataInputStream in;
 	private String nickname;
-
+	ExecutorService service;
 	// черный список у пользователя, а не у сервера
 	List<String> blackList;
 
@@ -22,8 +24,9 @@ public class ClientHandler {
 			this.out = new DataOutputStream(socket.getOutputStream());
 			this.blackList = new ArrayList<>();
 			this.nickname = null;
+			this.service = Executors.newFixedThreadPool(30);
 
-			new Thread(() -> {
+			service.execute(() -> {
 				boolean isExit = false;
 				try {
 					// отключение неавторизованных пользователей по таймауту
@@ -136,7 +139,7 @@ public class ClientHandler {
 						server.unsubscribe(this);
 					}
 				}
-			}).start();
+			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

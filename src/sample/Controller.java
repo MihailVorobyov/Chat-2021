@@ -258,7 +258,6 @@ public class Controller implements Initializable {
 				}
 				sb.append(c);
 			}
-
 			sb.reverse();
 			System.out.println(sb.toString());
 			chatArea.appendText(sb.toString());
