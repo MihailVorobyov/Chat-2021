@@ -76,7 +76,9 @@ public class AuthService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			statementClose(ps);
+			if (ps != null) {
+				statementClose(ps);
+			}
 		}
 
 		return 0;
@@ -157,7 +159,7 @@ public class AuthService {
 		ResultSet rs = null;
 
 		try {
-			ps = connection.prepareStatement("SELECT message FROM history WHERE nickname = ?");
+			ps = connection.prepareStatement("SELECT message FROM history WHERE nickname = ? LIMIT 100");
 			ps.setString(1, nickname);
 			rs = ps.executeQuery();
 

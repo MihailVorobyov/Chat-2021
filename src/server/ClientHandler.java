@@ -38,12 +38,13 @@ public class ClientHandler {
 								if (!server.isNickBusy(nick)) {
 									sendMsg("/auth-OK");
 									setNickname(nick);
+									sendMsg("/nick " + nickname);
 									socket.setSoTimeout(0);
 									server.subscribe(ClientHandler.this);
 									// загружаем чёрный список из БД
 									blackList.addAll(AuthService.getBlackListByNickname(nickname));
-									// загружаем историю сообщений
-									loadHistory();
+//									// загружаем историю сообщений из БД
+//									loadHistory();
 									break;
 								} else {
 									sendMsg("Учетная запись уже используется");
@@ -108,7 +109,7 @@ public class ClientHandler {
 									}
 								}
 							} else {
-								server.broadcastMessage(this, nickname +": " + str);
+								server.broadcastMessage(this, nickname + ": " + str);
 							}
 							System.out.println("Client (" + socket.getInetAddress() + "): " + str);
 						}
@@ -134,8 +135,6 @@ public class ClientHandler {
 					if (server.isNickBusy(nickname)) {
 						server.unsubscribe(this);
 					}
-
-
 				}
 			}).start();
 		} catch (IOException e) {
@@ -145,7 +144,7 @@ public class ClientHandler {
 
 	public void sendMsg(String msg) {
 		// История сообщений (хранить в БД в новой таблице)
-		if(nickname != null && !msg.startsWith("/clientList ")) {
+		if(nickname != null && !msg.startsWith("/history ")) {
 			AuthService.saveHistory(nickname, msg);
 		}
 
@@ -168,12 +167,12 @@ public class ClientHandler {
 		return blackList.contains(nickname);
 	}
 
-
-	private void loadHistory() {
-		try {
-			out.writeUTF(AuthService.getHistory(nickname));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	// 2. После загрузки клиента показывать ему последние 100 строк чата из БД
+//	private void loadHistory() {
+//		try {
+//			out.writeUTF(AuthService.getHistory(nickname));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 }
