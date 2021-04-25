@@ -14,7 +14,7 @@ public class ClientHandler {
 	private DataOutputStream out;
 	private DataInputStream in;
 	private String nickname;
-	ExecutorService service;
+
 	// черный список у пользователя, а не у сервера
 	List<String> blackList;
 
@@ -24,9 +24,8 @@ public class ClientHandler {
 			this.out = new DataOutputStream(socket.getOutputStream());
 			this.blackList = new ArrayList<>();
 			this.nickname = null;
-			this.service = Executors.newFixedThreadPool(30);
 
-			service.execute(() -> {
+			server.getExecutorService().execute(() -> {
 				boolean isExit = false;
 				try {
 					// отключение неавторизованных пользователей по таймауту
