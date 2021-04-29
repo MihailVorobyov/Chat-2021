@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
 <?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?scenebuilder-stylesheet /styles/style.css?>
-
-
 <?import javafx.geometry.Insets?>
-<VBox alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-      fx:controller="sample.Controller">
+
+<VBox alignment="center" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <stylesheets>
         <URL value="@/styles/style.css" />
     </stylesheets>
@@ -16,7 +17,7 @@
 
         <HBox fx:id="upperPanel">
             <children>
-                <TextField fx:id="loginField" promptText="Login" HBox.hgrow="ALWAYS" styleClass="field"/>
+                <TextField fx:id="loginField" promptText="Login" styleClass="field" HBox.hgrow="ALWAYS" />
                 <PasswordField fx:id="passwordField" onAction="#tryToAuth" promptText="Password" styleClass="field">
                     <HBox.margin>
                         <Insets left="10.0" />
@@ -40,10 +41,10 @@
             <children>
                 <VBox HBox.hgrow="ALWAYS">
                     <children>
-                        <TextArea fx:id="chatArea" editable="false" minWidth="300.0" VBox.vgrow="ALWAYS" styleClass="field"/>
+                        <TextArea fx:id="chatArea" cache="true" editable="false" minWidth="300.0" styleClass="field" wrapText="true" VBox.vgrow="ALWAYS"/>
                         <HBox fx:id="bottomPanel" managed="false" visible="false">
                             <children>
-                                <TextField fx:id="textField" onAction="#sendMsg" promptText="Enter message..." HBox.hgrow="ALWAYS" styleClass="field"/>
+                                <TextField fx:id="textField" onAction="#sendMsg" promptText="Enter message..." styleClass="field" HBox.hgrow="ALWAYS" />
                                 <Button onAction="#sendMsg" styleClass="btn" text="Send" />
                             </children>
                         </HBox>

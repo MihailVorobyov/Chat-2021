@@ -4,14 +4,23 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ConsoleServer {
 	private Vector<ClientHandler> users;
+	private ExecutorService executorService;
 
 	public ConsoleServer() {
 		users = new Vector<>();
 		ServerSocket server = null; // наша сторона
 		Socket socket = null; // удаленная (remote) сторона
+
+		/* Уровень 3, ДЗ №4.
+		 * 2. На серверной стороне сетевого чата реализовать управление потоками через ExecutorService.
+		 * Продолжение кода в классе ClientHandler.
+		 */
+		this.executorService = Executors.newFixedThreadPool(30);
 
 		try {
 			AuthService.connect();
@@ -46,6 +55,7 @@ public class ConsoleServer {
 			}
 
 			AuthService.disconnect();
+			executorService.shutdown();
 		}
 	}
 
@@ -106,4 +116,7 @@ public class ConsoleServer {
 		}
 	}
 
+	public ExecutorService getExecutorService() {
+		return executorService;
+	}
 }
