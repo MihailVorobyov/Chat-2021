@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ClientHandler {
 
@@ -45,8 +43,8 @@ public class ClientHandler {
 									server.subscribe(ClientHandler.this);
 									// загружаем чёрный список из БД
 									blackList.addAll(AuthService.getBlackListByNickname(nickname));
-//									// загружаем историю сообщений из БД
-//									loadHistory();
+									// загружаем историю сообщений из БД
+									loadHistory();
 									break;
 								} else {
 									sendMsg("Учетная запись уже используется");
@@ -145,8 +143,9 @@ public class ClientHandler {
 	}
 
 	public void sendMsg(String msg) {
-		// История сообщений (хранить в БД в новой таблице)
-		if(nickname != null && !msg.startsWith("/history ")) {
+
+		// Сохранене сообщений в БД
+		if (nickname != null && !msg.startsWith("/")) {
 			AuthService.saveHistory(nickname, msg);
 		}
 
@@ -170,11 +169,11 @@ public class ClientHandler {
 	}
 
 	// 2. После загрузки клиента показывать ему последние 100 строк чата из БД
-//	private void loadHistory() {
-//		try {
-//			out.writeUTF(AuthService.getHistory(nickname));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	private void loadHistory() {
+		try {
+			out.writeUTF(AuthService.getHistory(nickname));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -139,12 +139,12 @@ public class AuthService {
 
 	public static void saveHistory (String nickname, String message) {
 		try {
-			SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO history (date_time, nickname, message) " +
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO history (date_time, recipient, message) " +
 					"VALUES (?, ?, ?);");
-			ps.setString(1, formater.format(date));
+			ps.setString(1, formatter.format(date));
 			ps.setString(2, nickname);
 			ps.setString(3, message);
 			ps.executeUpdate();
@@ -153,13 +153,19 @@ public class AuthService {
 		}
 	}
 
+	/**
+	 * Выбирает из базы данных 100 последних сообщений из окна чата данного пользователя.
+	 * @param nickname
+	 * @return возвращает строку для отображения в окне чата
+	 */
 	public static String getHistory(String nickname) {
 		StringBuilder builder = new StringBuilder("/history ");
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 
 		try {
-			ps = connection.prepareStatement("SELECT message FROM history WHERE nickname = ? LIMIT 100");
+			ps = connection.prepareStatement("SELECT message_id, message FROM history WHERE recipient = ? ORDER" +
+					" BY message_id ASC LIMIT 100, (SELECT count(*) FROM history) - 100");
 			ps.setString(1, nickname);
 			rs = ps.executeQuery();
 
